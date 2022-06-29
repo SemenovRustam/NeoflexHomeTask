@@ -27,7 +27,8 @@ public class BookshopServiceImpl implements BookshopService {
     public List<String> getAllBook() {
         log.info("find all book");
         return bookRepository.findAll()
-                .stream().map(Book::getName)
+                .stream()
+                .map(Book::getName)
                 .collect(Collectors.toList());
     }
 
@@ -35,14 +36,16 @@ public class BookshopServiceImpl implements BookshopService {
     public List<String> getAllAuthor() {
         log.info("find all author");
         return authorRepository.findAll()
-                .stream().map(Author::getName)
+                .stream()
+                .map(Author::getName)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<String> getAllBookByAuthor(Long authorId) {
         Author author = authorRepository.findById(authorId).orElseThrow(() -> new BookshopException("Author is not exists"));
-        return author.getBook().stream()
+        return author.getBook()
+                .stream()
                 .map(Book::getName)
                 .collect(Collectors.toList());
     }
@@ -55,7 +58,8 @@ public class BookshopServiceImpl implements BookshopService {
     @Override
     public Integer getCoastAllBookByAuthor(Long authorId) {
         Author author = authorRepository.findById(authorId).orElseThrow(() -> new BookshopException("Author is not exists"));
-        return author.getBook().stream()
+        return author.getBook()
+                .stream()
                 .map(Book::getCoast)
                 .flatMapToInt(IntStream::of)
                 .sum();
@@ -63,23 +67,20 @@ public class BookshopServiceImpl implements BookshopService {
 
     @Override
     public List<String> getAuthorWithExpensiveBooks() {
-        ArrayList<Author> listWithExpensiveAuthor = new ArrayList<>();
-        List<Author> authors = authorRepository.findAll();
+        ArrayList<String> listWithExpensiveAuthor = new ArrayList<>();
 
-        for (Author author : authors) {
-            long count = author.getBook()
-                    .stream()
-                    .filter(getBookPredicate())
-                    .count();
+        authorRepository.findAll().forEach(author -> {
+                    long count = author.getBook()
+                            .stream()
+                            .filter(getBookPredicate())
+                            .count();
 
-            if (count >= 3) {
-                listWithExpensiveAuthor.add(author);
-            }
-        }
-        return listWithExpensiveAuthor
-                .stream()
-                .map(Author::getName)
-                .collect(Collectors.toList());
+                    if (count >= 3) {
+                        listWithExpensiveAuthor.add(author.getName());
+                    }
+                }
+        );
+        return listWithExpensiveAuthor;
     }
 
     private Predicate<Book> getBookPredicate() {
