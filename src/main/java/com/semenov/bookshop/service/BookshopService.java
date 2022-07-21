@@ -15,6 +15,8 @@ public interface BookshopService {
 
     Integer getCoastAllBookByAuthor(Long id);
 
-    public List<String> getAuthorWithExpensiveBooks();
+     List<String> getAuthorWithExpensiveBooks();
+
+    void saveBook();
 
 }

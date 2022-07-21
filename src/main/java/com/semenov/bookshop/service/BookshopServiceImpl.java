@@ -83,6 +83,14 @@ public class BookshopServiceImpl implements BookshopService {
         return listWithExpensiveAuthor;
     }
 
+    @Override
+    public void saveBook() {
+       Book book = new Book();
+       book.setCoast(1000);
+
+       bookRepository.save(book);
+    }
+
     private Predicate<Book> getBookPredicate() {
         return book -> book.getCoast() > 2000;
     }

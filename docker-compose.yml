@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  book:
+    image: book
+    build:
+      context: .
+    container_name: app
+    ports:
+    - 8080:8080
+    depends_on:
+      - PostgreSQL
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgreSQL:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=superpostgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  PostgreSQL:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=superpostgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres

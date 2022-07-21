@@ -56,4 +56,11 @@ public class BookShopController {
     public ResponseEntity<List<String>> getExpensiveAuthor() {
         return ResponseEntity.ok(bookshopService.getAuthorWithExpensiveBooks());
     }
+
+    @PostMapping("/saveBook")
+    @ApiOperation(value = "Сохранить", notes = "Получить список авторов")
+    public ResponseEntity<Void> saveBook() {
+        bookshopService.saveBook();
+        return ResponseEntity.ok().build();
+    }
 }
